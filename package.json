@@ -1,0 +1,28 @@
+{
+  "name": "goit-node-rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": "nodemon ./app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IYuliia/goit-node-rest-api.git"
+  },
+  "keywords": [],
+  "author": "Yuliia Ihosheva <catnew2012@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IYuliia/goit-node-rest-api/issues"
+  },
+  "homepage": "https://github.com/IYuliia/goit-node-rest-api#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "joi": "^17.13.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.0"
+  }
+}
