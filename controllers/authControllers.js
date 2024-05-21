@@ -35,13 +35,33 @@ const signin = async(req, res) => {
     };
 
     const token = createToken(payload);
+    await authServices.updateUser({_id: id}, {token});
 
     res.json({
         token,
     })
 }
 
+const getCurrent = (req, res) => {
+    const {email} = req.user;
+
+    res.json({
+        email,
+    })
+}
+
+const signout = async (req, res) => {
+    const {_id} = req.user;
+    await authServices.updateUser({_id}, {token: ""});
+
+    res.json({
+        message: "Signout success"
+    })
+}
+
 export default {
     signup: ctrlWrapper(signup),
     signin: ctrlWrapper(signin),
+    getCurrent: ctrlWrapper(getCurrent),
+    signout: ctrlWrapper(signout),
 }

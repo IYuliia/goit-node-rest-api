@@ -1,8 +1,9 @@
 import Contact from "../models/Contact.js"
 
 export const listContacts = (search = {}) => {
-    const {filter = {}} = search;
-    return Contact.find(filter)};
+    const {filter = {}, fields = "", settings = {}} = search;
+    return Contact.find(filter, fields, settings).populate("owner", "email subscription");
+};
 
 export const getContact = filter => Contact.findOne(filter);
 

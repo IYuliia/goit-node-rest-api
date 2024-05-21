@@ -5,7 +5,11 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 const getAllContacts = async (req, res) => {
     const { _id: owner} = req.user;
     const filter = {owner};
-    const result = await contactsServices.listContacts({filter});
+    const fields = " ";
+    const {page = 1, limit = 20} = req.query;
+    const skip = (page - 1) * limit;
+    const settings = {skip, limit};
+    const result = await contactsServices.listContacts({filter, fields, settings});
 
     res.json(result);
 };
