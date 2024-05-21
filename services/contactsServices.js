@@ -4,20 +4,17 @@ export const listContacts = (search = {}) => {
     const {filter = {}} = search;
     return Contact.find(filter)};
 
-export const getContactById = async (_id) => {
-    const result = await Contact.findById(_id);
-    return result;
-};
+export const getContact = filter => Contact.findOne(filter);
 
-export const removeContact = (id) => Contact.findByIdAndDelete(id);
+export const removeContact = filter => Contact.findOneAndDelete(filter);
 
 export const addContact = data => Contact.create(data);
 
-export const updateContactById = async (id, data) => Contact.findByIdAndUpdate(id, data);
+export const updateContact = (filter, data) => Contact.findOneAndUpdate(filter, data);
 
-export const updateStatusContactById = async (id, data) => {
+export const updateStatusContact = async (filter, data) => {
     const { favorite } = data;
-    const updatedContact = await Contact.findByIdAndUpdate(id, { favorite }, { new: true });
+    const updatedContact = await Contact.findOneAndUpdate(filter, { favorite }, { new: true });
 
     if (!updatedContact) {
         return null;
