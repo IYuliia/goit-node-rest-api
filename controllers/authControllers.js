@@ -59,9 +59,23 @@ const signout = async (req, res) => {
     })
 }
 
+const updateSubscription = async (req, res) => {
+    const { _id } = req.user;
+    const { subscription } = req.body;
+    const updatedUser = await authServices.updateUser({ _id }, { subscription }); 
+    if (!updatedUser) {
+        throw HttpError(404, "User not found");
+    }
+    res.json({
+        message: "Subscription update success",
+        subscription: updatedUser.subscription,
+    });
+}
+
 export default {
     signup: ctrlWrapper(signup),
     signin: ctrlWrapper(signin),
     getCurrent: ctrlWrapper(getCurrent),
     signout: ctrlWrapper(signout),
+    updateSubscription: ctrlWrapper(updateSubscription),
 }

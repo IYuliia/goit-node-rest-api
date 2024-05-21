@@ -2,6 +2,9 @@ import Contact from "../models/Contact.js"
 
 export const listContacts = (search = {}) => {
     const {filter = {}, fields = "", settings = {}} = search;
+    if ("favorite" in filter) {
+        filter.favorite = filter.favorite === "true";
+    }
     return Contact.find(filter, fields, settings).populate("owner", "email subscription");
 };
 
