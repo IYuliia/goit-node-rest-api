@@ -3,19 +3,29 @@ import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import compareHash from "../helpers/compareHash.js";
 import { createToken } from "../helpers/jwt.js";
+import fs from "fs/promises";
+import path from "path";
+
+const avatarsPath = path.resolve("public", "avatars");
 
 const signup = async (req, res) => {
     const {email} = req.body;
+    const {path: oldPath, filename} = req.file;
+    const newPath = path.join(avatarsPath, filename);
+    await fs.rename(oldPath, newPath);
+
+    const avatarURL = path.join("avatars", filename);
     const user = await authServices.findUser({email});
     if(user) {
         throw HttpError(409, "Email in use");
     }
-    const newUser = await authServices.saveUser(req.body);
+    const newUser = await authServices.saveUser(req.body, avatarURL);
 
     res.status(201).json({
         user: {
-        email: newUser.email,
-        subscription: newUser.subscription,
+            email: newUser.email,
+            subscription: newUser.subscription,
+            avatarURL: newUser.avatarURL,
         }
     })
 }
