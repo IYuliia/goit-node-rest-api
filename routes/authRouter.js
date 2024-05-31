@@ -10,6 +10,8 @@ const authRouter = express.Router();
 
 authRouter.post("/register", upload.single("avatar"), isEmptyBody, validateBody(authSignupSchema), authControllers.signup);
 
+authRouter.get("/verify/:verificationToken");
+
 authRouter.post("/login", isEmptyBody, validateBody(authSigninSchema), authControllers.signin);
 
 authRouter.get("/current", authenticate, authControllers.getCurrent);
