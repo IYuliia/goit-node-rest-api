@@ -7,6 +7,8 @@ import gravatar from "gravatar";
 import jimp from "jimp";
 import fs from "fs/promises";
 import path from "path";
+import { nanoid } from "nanoid";
+import sendEmail from "../helpers/sendEmail.js";
 
 const avatarsPath = path.resolve("public", "avatars");
 
@@ -18,7 +20,22 @@ const signup = async (req, res) => {
     if(user) {
         throw HttpError(409, "Email in use");
     }
-    const newUser = await authServices.saveUser(req.body, avatarURL);
+
+    if(!user.verify) {
+        throw HttpError(401, "Email not verified");
+    }
+
+    const verificationToken = nanoid();
+
+    const newUser = await authServices.saveUser({...req.body, avatarURL, verificationToken});
+
+    const verifyEmail = {
+        to: email,
+        subject: "Verify email",
+        html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify your email</a>`,
+    }
+
+    await sendEmail(verifyEmail);
 
     res.status(201).json({
         user: {
