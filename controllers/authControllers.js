@@ -21,10 +21,6 @@ const signup = async (req, res) => {
         throw HttpError(409, "Email in use");
     }
 
-    // if(!user.verify) {
-    //     throw HttpError(401, "Email not verified");
-    // }
-
     const verificationToken = nanoid();
 
     const newUser = await authServices.saveUser({...req.body, avatarURL, verificationToken});
@@ -78,6 +74,8 @@ const resendVerify = async(req, res) => {
         html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">Click to verify your email</a>`,
     }
 
+    await sendEmail(verifyEmail);
+
     res.json ({
         message: "Verification email sent"
     })
@@ -89,7 +87,13 @@ const signin = async(req, res) => {
     if(!user) {
         throw HttpError(401, "Email or password is wrong")
     }
+    
+    if (!user.verify) {
+        throw HttpError(401, "Email not verified");
+    }
+
     const comparePassword = await compareHash(password, user.password);
+
     if(!comparePassword) {
         throw HttpError(401, "Email or password is wrong");
     }
